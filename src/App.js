@@ -6,12 +6,18 @@ import Pagination from "./components/Pagination";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(() =>
+    parseInt(new URLSearchParams(window.location.search).get('page')) || 0
+  );
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    window.history.replaceState(null, '', `?page=${currentPage}`);
+  }, [currentPage]);
 
   const fetchData = async () => {
     try {
