@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import ProductCard from "./components/ProductCard";
-
-const PAGE_SIZE = 10;
+import { PAGE_SIZE } from "./constants";
+import Pagination from "./components/Pagination";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -46,11 +46,7 @@ function App() {
   const endPageSize = startPageSize + PAGE_SIZE;
 
   if (error) {
-    return (
-      <div className="error" style={{ color: "red", margin: "2em" }}>
-        {error}
-      </div>
-    );
+    return <div className="error">{error}</div>;
   }
   if (!products.length) {
     return <div className="loading-products">Loading products...</div>;
@@ -60,35 +56,13 @@ function App() {
       <h1 className="app-heading">Pagination</h1>
       <div>
         <h2 className="products-heading">Products</h2>
-        <div className="pagination-container">
-          <button
-            className="pagination-arrow"
-            onClick={handlePreviousPageChange}
-            disabled={currentPage === 0}
-          >
-            ⬅️
-          </button>
-          {[
-            ...Array(noOfPages)
-              .keys()
-              .map((pageNum) => (
-                <button
-                  className="page-number"
-                  key={pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                >
-                  {pageNum + 1}
-                </button>
-              )),
-          ]}
-          <button
-            className="pagination-arrow"
-            onClick={handleNextPageChange}
-            disabled={currentPage === noOfPages - 1}
-          >
-            ➡️
-          </button>
-        </div>
+        <Pagination
+          handlePageChange={handlePageChange}
+          handlePreviousPageChange={handlePreviousPageChange}
+          handleNextPageChange={handleNextPageChange}
+          noOfPages={noOfPages}
+          currentPage={currentPage}
+        />
         <div className="products-container">
           {products.slice(startPageSize, endPageSize).map((product) => (
             <ProductCard
